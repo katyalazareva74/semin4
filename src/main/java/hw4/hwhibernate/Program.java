@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import java.sql.SQLException;
+
 public class Program {
     /*
     Создайте базу данных (например, SchoolDB).
@@ -22,27 +23,26 @@ public class Program {
                 .addAnnotatedClass(Course.class)
                 .buildSessionFactory();
         // Создание сессии
-        try  {
+        try {
             initialDatabase(sessionFactory);
             Course course = new Course("Математика для младших классов", 100);
             saveDatabase(sessionFactory, course);
             readDatabase(sessionFactory, 2);
             updateDatabase(sessionFactory, 1, "Математика для старших классов", 360);
             deleteDatabase(sessionFactory, 3);
-         }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-     private static void initialDatabase(SessionFactory sessionFactory) throws SQLException{
-        String[] titles = new String[] {"Математика", "Информатика", "Физика"};
-        int[] durations = new int[] {220, 240, 200};
+    private static void initialDatabase(SessionFactory sessionFactory) throws SQLException {
+        String[] titles = new String[]{"Математика", "Информатика", "Физика"};
+        int[] durations = new int[]{220, 240, 200};
         Course[] courss = new Course[titles.length];
-        try(Session sessionnew = sessionFactory.getCurrentSession()) {
+        try (Session sessionnew = sessionFactory.getCurrentSession()) {
             sessionnew.beginTransaction();
-            for (int i = 0; i < titles.length ; i++) {
+            for (int i = 0; i < titles.length; i++) {
                 courss[i] = new Course(titles[i], durations[i]);
                 sessionnew.save(courss[i]);
             }
@@ -51,8 +51,9 @@ public class Program {
             System.out.println("Transaction commit successfully");
         }
     }
-    private static void saveDatabase(SessionFactory sessionFactory, Course course) throws SQLException{
-        try(Session sessionnew = sessionFactory.getCurrentSession()) {
+
+    private static void saveDatabase(SessionFactory sessionFactory, Course course) throws SQLException {
+        try (Session sessionnew = sessionFactory.getCurrentSession()) {
             sessionnew.beginTransaction();
             sessionnew.save(course);
             System.out.println("Object course save successfully");
@@ -60,25 +61,27 @@ public class Program {
             System.out.println("Transaction commit successfully");
         }
     }
-    private static void readDatabase(SessionFactory sessionFactory, int id) throws SQLException{
-        try(Session sessionnew = sessionFactory.getCurrentSession()) {
+
+    private static void readDatabase(SessionFactory sessionFactory, int id) throws SQLException {
+        try (Session sessionnew = sessionFactory.getCurrentSession()) {
             sessionnew.beginTransaction();
             Course courseread = sessionnew.get(Course.class, id);
-            if(courseread!=null) {
+            if (courseread != null) {
                 System.out.println(courseread);
                 System.out.println("Object course read successfully");
             } else {
-                System.out.println("No object with id "+id);
+                System.out.println("No object with id " + id);
             }
             sessionnew.getTransaction().commit();
             System.out.println("Transaction commit successfully");
         }
     }
-    private static void updateDatabase(SessionFactory sessionFactory, int id, String str, int duration) throws SQLException{
-        try(Session sessionnew = sessionFactory.getCurrentSession()) {
+
+    private static void updateDatabase(SessionFactory sessionFactory, int id, String str, int duration) throws SQLException {
+        try (Session sessionnew = sessionFactory.getCurrentSession()) {
             sessionnew.beginTransaction();
             Course courseupdate = sessionnew.get(Course.class, id);
-            if(courseupdate!=null) {
+            if (courseupdate != null) {
                 System.out.println(courseupdate);
                 if (!str.equals("")) {
                     courseupdate.setTitle(str);
@@ -89,20 +92,25 @@ public class Program {
                 sessionnew.save(courseupdate);
                 System.out.println(courseupdate);
                 System.out.println("Object course update successfully");
-            }else {System.out.println("No object with id "+id);}
+            } else {
+                System.out.println("No object with id " + id);
+            }
             sessionnew.getTransaction().commit();
             System.out.println("Transaction commit successfully");
         }
     }
-    private static void deleteDatabase(SessionFactory sessionFactory, int id) throws SQLException{
-        try(Session sessionnew = sessionFactory.getCurrentSession()) {
+
+    private static void deleteDatabase(SessionFactory sessionFactory, int id) throws SQLException {
+        try (Session sessionnew = sessionFactory.getCurrentSession()) {
             sessionnew.beginTransaction();
             Course coursedel = sessionnew.get(Course.class, id);
-            if(coursedel!=null) {
+            if (coursedel != null) {
                 System.out.println(coursedel);
                 sessionnew.delete(coursedel);
                 System.out.println("Object course delete successfully");
-            }else {System.out.println("No object with id "+id);}
+            } else {
+                System.out.println("No object with id " + id);
+            }
             sessionnew.getTransaction().commit();
             System.out.println("Transaction commit successfully");
         }
