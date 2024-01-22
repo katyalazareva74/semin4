@@ -1,9 +1,9 @@
-package hw4;
+package hw4.hwhibernate;
 
+import hw4.models.Course;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-
 
 import java.sql.SQLException;
 public class Program {
@@ -24,19 +24,19 @@ public class Program {
         // Создание сессии
         try  {
             initialDatabase(sessionFactory);
-            Course course = new Course("Математика для старших классов", 450);
+            Course course = new Course("Математика для младших классов", 100);
             saveDatabase(sessionFactory, course);
-            readDatabase(sessionFactory, 4);
-            updateDatabase(sessionFactory, 1, "", 250);
+            readDatabase(sessionFactory, 2);
+            updateDatabase(sessionFactory, 1, "Математика для старших классов", 360);
             deleteDatabase(sessionFactory, 3);
-
-        }
+         }
         catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
-    private static void initialDatabase(SessionFactory sessionFactory) throws SQLException{
+
+     private static void initialDatabase(SessionFactory sessionFactory) throws SQLException{
         String[] titles = new String[] {"Математика", "Информатика", "Физика"};
         int[] durations = new int[] {220, 240, 200};
         Course[] courss = new Course[titles.length];
@@ -64,8 +64,12 @@ public class Program {
         try(Session sessionnew = sessionFactory.getCurrentSession()) {
             sessionnew.beginTransaction();
             Course courseread = sessionnew.get(Course.class, id);
-            System.out.println(courseread);
-            System.out.println("Object course read successfully");
+            if(courseread!=null) {
+                System.out.println(courseread);
+                System.out.println("Object course read successfully");
+            } else {
+                System.out.println("No object with id "+id);
+            }
             sessionnew.getTransaction().commit();
             System.out.println("Transaction commit successfully");
         }
@@ -74,15 +78,18 @@ public class Program {
         try(Session sessionnew = sessionFactory.getCurrentSession()) {
             sessionnew.beginTransaction();
             Course courseupdate = sessionnew.get(Course.class, id);
-            System.out.println(courseupdate);
-            if (!str.equals("")) {
-                courseupdate.setTitle(str);
-            }
-            if (duration > 0) {
-                courseupdate.setDuration(duration);
-            }
-            sessionnew.save(courseupdate);
-            System.out.println("Object course update successfully");
+            if(courseupdate!=null) {
+                System.out.println(courseupdate);
+                if (!str.equals("")) {
+                    courseupdate.setTitle(str);
+                }
+                if (duration > 0) {
+                    courseupdate.setDuration(duration);
+                }
+                sessionnew.save(courseupdate);
+                System.out.println(courseupdate);
+                System.out.println("Object course update successfully");
+            }else {System.out.println("No object with id "+id);}
             sessionnew.getTransaction().commit();
             System.out.println("Transaction commit successfully");
         }
@@ -91,9 +98,11 @@ public class Program {
         try(Session sessionnew = sessionFactory.getCurrentSession()) {
             sessionnew.beginTransaction();
             Course coursedel = sessionnew.get(Course.class, id);
-            System.out.println(coursedel);
-            sessionnew.delete(coursedel);
-            System.out.println("Object course delete successfully");
+            if(coursedel!=null) {
+                System.out.println(coursedel);
+                sessionnew.delete(coursedel);
+                System.out.println("Object course delete successfully");
+            }else {System.out.println("No object with id "+id);}
             sessionnew.getTransaction().commit();
             System.out.println("Transaction commit successfully");
         }
