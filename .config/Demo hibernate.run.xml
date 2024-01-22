@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Demo hibernate" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="hw4.hwhibernate.Program" />
+    <module name="name2" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
